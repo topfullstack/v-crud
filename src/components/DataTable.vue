@@ -1,56 +1,121 @@
 <template>
   <div>
+    <div>
+      <el-button type="primary" @click="showDialog(config.create, {})">
+        {{ config.create.title }}
+      </el-button>
+    </div>
 
-    <DataForm v-model="createModel" v-bind="config.create" @submit.native.prevent="create"></DataForm>
-
-    <el-row >
-      <el-button type="primary" @click="isShowCreateForm = true">{{config.create.title}}</el-button>
-      
-    </el-row>
-    
     <el-table :data="data.data" @sort-change="sortChange">
-      <el-table-column v-bind="field" v-for="field in config.list.fields" :key="field.prop">
-        <template v-slot="{row}">
+      <el-table-column
+        v-bind="field"
+        v-for="field in config.list.fields"
+        :key="field.prop"
+      >
+        <template v-slot="{ row }">
           <DataValue v-bind="field" :value="row"></DataValue>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination
+      style="margin-top:1rem;"
+      @size-change="
+        val => {
+          query.limit = val;
+          fetch();
+        }
+      "
+      @current-change="
+        val => {
+          query.page = val;
+          fetch();
+        }
+      "
+      v-bind="get(config.list, 'page', defaultPagination)"
+      :current-page="currentPage"
+      :total="total"
+    >
+    </el-pagination>
+
+    <DataTableDialog
+      v-bind="dialogConfig"
+      v-model="model"
+      :visible.sync="isShowDialog"
+      @success="fetch"
+    ></DataTableDialog>
   </div>
 </template>
 
 <script lang="ts">
 import DataValue from "./DataValue.vue";
 import DataForm from "./DataForm.vue";
+import DataTableDialog from "./DataTableDialog.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
+import { get } from "dot-prop";
 
 @Component({
-  components: { DataValue, DataForm }
+  components: { DataValue, DataForm, DataTableDialog }
 })
 export default class DataTable extends Vue {
   @Prop(String) resource!: string;
 
-  isShowCreateForm = false
-  isShowUpdateForm = false
+  isShowDialog = false;
+
+  get = get;
 
   data: any = {};
-  
-  createModel = {}
+
+  model = {};
+  creating = false;
 
   config = {
     create: {
       title: "创建用户",
-      fields: [
-        { prop: "name", label: "姓名" }, { prop: "ID", label: "身份证" },
-        {prop: 'dob', label: '生日', type: 'date', valueFormat: 'yyyy-MM-dd'}
-      ]
+      dialog: {
+        is: "el-drawer",
+        size: "80%"
+      },
+      form: {
+        labelWidth: "120px",
+        method: "post",
+        action: "users",
+        successMessage: "用户创建成功",
+        fields: [
+          { prop: "name", label: "姓名" },
+          { prop: "ID", label: "身份证" },
+          {
+            prop: "dob",
+            label: "生日",
+            type: "date",
+            valueFormat: "yyyy-MM-dd"
+          }
+        ]
+      }
     },
     update: {
-      fields: [{ prop: "name", label: "姓名" }, { prop: "ID", label: "身份证" }]
+      title: "更新用户",
+      form: {
+        labelWidth: "120px",
+        method: "put",
+        action: "users/${model._id}",
+        successMessage: "用户更新成功",
+        fields: [
+          { prop: "name", label: "姓名" },
+          { prop: "ID", label: "身份证" }
+        ]
+      }
     },
     search: {
-      fields: [{ prop: "name", label: "姓名" }, { prop: "ID", label: "身份证" }]
+      fields: [
+        { prop: "name", label: "姓名" },
+        { prop: "ID", label: "身份证" }
+      ]
     },
     list: {
+      pagination: {
+        pageSize: 2
+      },
       fields: [
         { prop: "_id", label: "ID" },
         { prop: "url", label: "URL" },
@@ -67,10 +132,34 @@ export default class DataTable extends Vue {
     total: 0
   };
 
-  query: any = {};
+  query: any = { limit: 10, page: 1 };
 
-  showCreate(){
+  dialogConfig = {};
 
+  defaultPagination = {};
+
+  get pageSizes() {
+    return get(this.config.list, "page.pageSizes", [
+      get(this.config.list, "page.pageSize", 10)
+    ]);
+  }
+
+  get total() {
+    return get(this.data, "total", 0);
+  }
+
+  get currentPage() {
+    return get(this.data, "page", 1);
+  }
+
+  set currentPage(val) {
+    this.$set(this.data, "page", val);
+  }
+
+  showDialog(config, model = {}) {
+    this.dialogConfig = config;
+    this.model = model;
+    this.isShowDialog = true;
   }
 
   async fetch() {
@@ -91,12 +180,6 @@ export default class DataTable extends Vue {
         [prop]: order === "ascending" ? 1 : -1
       };
     }
-    this.fetch();
-  }
-
-  async changepage({ pageSize, currentPage }) {
-    this.query.limit = pageSize;
-    this.query.page = currentPage;
     this.fetch();
   }
 
@@ -122,23 +205,6 @@ export default class DataTable extends Vue {
     this.fetch();
   }
 
-  async create(row, done, loading) {
-    console.log(this.createModel)
-    // await this.$http.post(`${this.resource}`, row);
-    // this.$message.success("创建成功");
-    // this.fetch();
-    // done();
-  }
-
-  async update(row, index, done, loading) {
-    const data = JSON.parse(JSON.stringify(row));
-    delete data.$index;
-    await this.$http.put(`${this.resource}/${row._id}`, data);
-    this.$message.success("更新成功");
-    this.fetch();
-    done();
-  }
-
   async remove(row) {
     try {
       await this.$confirm("是否确认删除");
@@ -153,9 +219,17 @@ export default class DataTable extends Vue {
   created() {
     // this.fetchConfig();
     this.fetch();
+    this.$watch("config.list.pagination", ({
+      pageSize
+    }) => {
+      this.query.limit = pageSize
+      this.defaultPagination = {
+        pageSize,
+        pageSizes: [pageSize]
+      }
+    }, { deep: true, immediate: true });
   }
 }
 </script>
 
-<style>
-</style>
+<style></style>
