@@ -1,5 +1,13 @@
 <template>
   <div>
+
+    <DataForm v-model="createModel" v-bind="config.create" @submit.native.prevent="create"></DataForm>
+
+    <el-row >
+      <el-button type="primary" @click="isShowCreateForm = true">{{config.create.title}}</el-button>
+      
+    </el-row>
+    
     <el-table :data="data.data" @sort-change="sortChange">
       <el-table-column v-bind="field" v-for="field in config.list.fields" :key="field.prop">
         <template v-slot="{row}">
@@ -12,18 +20,29 @@
 
 <script lang="ts">
 import DataValue from "./DataValue.vue";
+import DataForm from "./DataForm.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({
-  components: { DataValue },
+  components: { DataValue, DataForm }
 })
 export default class DataTable extends Vue {
   @Prop(String) resource!: string;
+
+  isShowCreateForm = false
+  isShowUpdateForm = false
+
   data: any = {};
+  
+  createModel = {}
+
   config = {
     create: {
       title: "创建用户",
-      fields: [{ prop: "name", label: "姓名" }, { prop: "ID", label: "身份证" }]
+      fields: [
+        { prop: "name", label: "姓名" }, { prop: "ID", label: "身份证" },
+        {prop: 'dob', label: '生日', type: 'date', valueFormat: 'yyyy-MM-dd'}
+      ]
     },
     update: {
       fields: [{ prop: "name", label: "姓名" }, { prop: "ID", label: "身份证" }]
@@ -34,16 +53,10 @@ export default class DataTable extends Vue {
     list: {
       fields: [
         { prop: "_id", label: "ID" },
-        { prop: "name", label: "姓名" },
-        { prop: "ID", label: "身份证" },
-        {
-          prop: "IDphoto",
-          label: "身份证照片",
-          type: "image"
-        },
+        { prop: "url", label: "URL" },
         {
           prop: "createdAt",
-          label: "注册时间",
+          label: "创建时间",
           type: "datetime",
           format: "yyyy-MM-dd HH:mm"
         }
@@ -55,6 +68,10 @@ export default class DataTable extends Vue {
   };
 
   query: any = {};
+
+  showCreate(){
+
+  }
 
   async fetch() {
     const res = await this.$http.get(`${this.resource}`, {
@@ -96,7 +113,7 @@ export default class DataTable extends Vue {
         continue;
       }
       cond[k] = val;
-      const field = this.config.option.column.find(v => v.prop === k);
+      const field: any = this.config.list.fields.find(v => v.prop === k);
       if (field.regex && val) {
         cond[k] = { $regex: val };
       }
@@ -106,10 +123,11 @@ export default class DataTable extends Vue {
   }
 
   async create(row, done, loading) {
-    await this.$http.post(`${this.resource}`, row);
-    this.$message.success("创建成功");
-    this.fetch();
-    done();
+    console.log(this.createModel)
+    // await this.$http.post(`${this.resource}`, row);
+    // this.$message.success("创建成功");
+    // this.fetch();
+    // done();
   }
 
   async update(row, index, done, loading) {

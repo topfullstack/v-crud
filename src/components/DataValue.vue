@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import {get} from 'dot-prop'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({
@@ -22,7 +22,7 @@ export default class DataValue extends Vue {
     type: String,
     default: 'text'
   })
-  type: string
+  type!: string
   @Prop(String) format?: string
   @Prop() value:any
 
