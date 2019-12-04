@@ -1,14 +1,21 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
+import ResourceList from '../views/ResourceList.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
+const routes: RouteConfig[] = [
   {
     path: '/',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/:resource/list',
+    name: 'resource',
+    component: ResourceList,
+    props: true,
   },
   {
     path: '/about',
