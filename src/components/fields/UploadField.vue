@@ -1,10 +1,5 @@
 <template>
-  <el-upload
-    v-bind="$attrs"
-    class="avatar-uploader"
-    :show-file-list="false"
-    :on-success="success"
-  >
+  <el-upload v-bind="$attrs" :action="action" class="avatar-uploader" :show-file-list="false" :http-request="upload">
     <img v-if="value" :src="value" class="avatar" />
     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
   </el-upload>
@@ -16,17 +11,26 @@ import { get, merge } from "../util";
 
 @Component({})
 export default class UploadField extends Vue {
+  @Prop(String) value!: string;
 
-  @Prop(String) value !: string
+  @Prop({
+    default: '/upload'
+  }) action!: string;
+  @Prop({
+    default: 'url'
+  }) responseKey!: string;
 
-  async success(data){
-    console.log(data)
+  async upload(options) {
+    const { action, data, file, filename } = options;
+    const fd = new FormData();
+    fd.append(filename, file);
+    const res = await this.$http.post(action, fd)
+    this.$emit('input', get(res.data, this.responseKey))
   }
 }
 </script>
 
 <style lang="scss">
-
 $height: 178px;
 
 .avatar-uploader .el-upload {

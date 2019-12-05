@@ -269,7 +269,7 @@ export default class DataTable extends Vue {
     
     this.fetchConfig();
 
-    this.showDialog(this.config.create, {})
+    // this.showDialog(this.config.create, {})
     this.fetch();
     this.$watch(
       "config.list.pagination",

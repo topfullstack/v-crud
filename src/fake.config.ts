@@ -129,36 +129,41 @@ export const courses = {
   },
   create: {
     dialog: {
-      title: "创建课程",
+      title: "创建课程"
     },
     form: {
-      labelWidth: '100px',
+      labelWidth: "100px",
       fields: [
         { prop: "title", label: "标题" },
         {
           prop: "cover",
           label: "封面图",
-          tag: "upload-field",
-          action: "/upload"
+          tag: "upload-field"
         }
       ]
     }
   },
   edit: {
     dialog: {
-      tag: "el-drawer",
+      // tag: "el-drawer",
       title: "编辑课程",
-      size: "50%",
-      direction: "ltr"
+      width: "80%"
+      // direction: "ltr"
     },
     form: {
+      labelWidth: "100px",
       fields: [
         { prop: "title", label: "标题" },
         {
+          prop: "posts",
+          label: "音频",
+          tag: "el-select",
+          options: [{ text: "课程1", value: "1" }]
+        },
+        {
           prop: "cover",
           label: "封面图",
-          tag: "upload-field",
-          action: "https://jsonplaceholder.typicode.com/posts/"
+          tag: "upload-field"
         }
       ]
     }
