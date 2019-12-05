@@ -1,7 +1,7 @@
 <template>
   <span v-if="field.options">{{ getOptionLabel(val) }}</span>
   <span v-else-if="isDate">{{ val | formatDate }}</span>
-  <span v-else :is="field.component || 'span'" v-bind="attrs">{{ val }}</span>
+  <span v-else :is="field.tag || 'span'" v-bind="attrs">{{ val }}</span>
 </template>
 
 <script lang="ts">

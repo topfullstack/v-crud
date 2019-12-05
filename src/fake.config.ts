@@ -4,7 +4,7 @@ export const users = {
       label: "创建用户"
     },
     dialog: {
-      component: "el-drawer",
+      tag: "el-drawer",
       title: "创建用户",
       size: "80%"
     },
@@ -18,7 +18,7 @@ export const users = {
         {
           prop: "role_id",
           label: "角色",
-          component: "el-radio-group",
+          tag: "el-radio-group",
           options: [
             { text: "讲师", value: 1 },
             { text: "用户", value: 2 }
@@ -27,7 +27,7 @@ export const users = {
         {
           prop: "birthday",
           label: "生日",
-          component: "el-date-picker",
+          tag: "el-date-picker",
           type: "date",
           valueFormat: "yyyy-MM-dd"
         }
@@ -46,7 +46,7 @@ export const users = {
         {
           prop: "role_id",
           label: "角色",
-          component: "el-radio-group",
+          tag: "el-radio-group",
           options: [
             { text: "讲师", value: 1 },
             { text: "用户", value: 2 }
@@ -55,7 +55,7 @@ export const users = {
         {
           prop: "birthday",
           label: "生日",
-          component: "el-date-picker",
+          tag: "el-date-picker",
           type: "date",
           valueFormat: "yyyy-MM-dd"
         }
@@ -73,13 +73,13 @@ export const users = {
         prop: "balance",
         label: "余额",
         range: true,
-        component: "el-input-number"
+        tag: "el-input-number"
       },
       {
         prop: "created_at",
         label: "注册时间",
         type: "datetimerange",
-        component: "el-date-picker",
+        tag: "el-date-picker",
         format: "yyyy-MM-dd",
         style: { width: "220px" }
       }
@@ -119,21 +119,22 @@ export const users = {
 };
 
 export const courses = {
-  search: {
-
-  },
+  search: {},
   list: {
+    title: '课程管理',
     fields: [
-      { prop: "title" },
-      { prop: "posts.length", label: "音频数量" },
+      { prop: "_id", label: 'ID', width: 220 },
+      { prop: "title", label: '标题' },
+      { prop: "posts.length", value: '${row.posts.length}', label: "音频数量" },
       { prop: "price", label: "价格(值币)" },
       { prop: "user.username", label: "老师" },
       {
         prop: "cover",
         label: "封面图",
         width: "120px",
-        component: "img",
-        attrs: { src: "${row.cover}", width: "100%" }
+        type: "image",
+        tag: "img",
+        attrs: { src: "${row.cover}", height: "80" }
       }
     ]
   }

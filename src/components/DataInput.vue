@@ -2,7 +2,7 @@
   <el-radio-group v-if="['radio', 'radio-group', 'el-radio-group'].includes(field.is)" v-model="val">
     <el-radio :label="option.value" v-for="option in field.options" :key="option.value">{{option.text}}</el-radio>
   </el-radio-group>
-  <el-input v-else v-model="val" v-bind="field" :is="field.component || 'el-input'" ></el-input>
+  <el-input v-else v-model="val" v-bind="field" :is="field.tag || 'el-input'" ></el-input>
   
 </template>
 
