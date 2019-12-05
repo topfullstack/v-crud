@@ -1,6 +1,4 @@
 export const users = {
-  create: false,
-  
   create1: {
     button: {
       label: "创建用户"
@@ -121,6 +119,9 @@ export const users = {
 };
 
 export const courses = {
+  search: {
+
+  },
   list: {
     fields: [
       { prop: "title" },

@@ -2,13 +2,13 @@
   <div>
     <div>
       <el-button
-        v-if="get(config, 'create') !== false"
+        v-if="get(config, 'create.form.fields')"
         v-bind="get(config, 'create.button')"
         @click="showDialog(config.create, {})"
         >{{ get(config, "create.button.label") }}</el-button>
     </div>
 
-    <div style="margin-top: 1rem;">
+    <div style="margin-top: 1rem;" v-if="get(config, 'search.form.fields')">
       <h3 v-if="get(config, 'search.title')">
         {{ get(config, "search.title") }}
       </h3>
@@ -41,11 +41,13 @@
         v-slot="{ row, $index }"
       >
         <el-button
+          v-if="get(config, 'edit.form.fields')"
           v-bind="get(config, 'list.action.edit')"
           @click="edit(row, $index)"
           >{{ get(config, "list.action.edit.label") }}</el-button
         >
         <el-button
+          v-if="get(config, 'delete')"
           v-bind="get(config, 'list.action.delete')"
           @click="remove(row)"
           >{{ get(config, "list.action.delete.label") }}</el-button
