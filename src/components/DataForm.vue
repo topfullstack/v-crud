@@ -5,7 +5,11 @@
     @submit.native.prevent="submit"
     v-loading="loading"
   >
-    <el-form-item v-for="field in fields" :key="field.prop" v-bind="field">
+    <el-form-item
+      v-for="field in fields"
+      :key="field.prop"
+      :label="field.label"
+    >
       <DataInput
         :value="value"
         :field="field"
@@ -45,10 +49,12 @@ export default class DataForm extends Vue {
 
   @Prop(Array) fields!: any[];
 
-  @Prop({ default: "提交" }) submitText!: string;
-  @Prop({ default: "" }) backText!: string;
+  @Prop({ default: "提交" })
+  submitText!: string;
+  @Prop({ default: "" })
+  backText!: string;
 
-  loading = false
+  loading = false;
 
   getFieldValue(field) {
     return get(this.value, field.prop);

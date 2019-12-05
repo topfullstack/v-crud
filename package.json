@@ -14,6 +14,8 @@
     "deepmerge": "^4.2.2",
     "dot-prop": "^5.2.0",
     "element-ui": "^2.4.5",
+    "micromustache": "^6.1.1",
+    "mustache": "^3.1.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.3.0",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.5",
     "@types/mocha": "^5.2.4",
+    "@types/mustache": "^0.8.32",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-plugin-router": "^4.1.0",

@@ -1,5 +1,9 @@
 <template>
-  <DataTable :resource="resource"></DataTable>
+  <DataTable :resource="resource">
+    <!-- <template v-slot:prop:title="{row}">
+      <el-button type="primary">{{row.title}}</el-button>
+    </template> -->
+  </DataTable>
 </template>
 
 <script lang="ts">

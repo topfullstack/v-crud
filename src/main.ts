@@ -7,7 +7,10 @@ import './plugins/element'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios.create({
-  baseURL: 'http://localhost:30002'
+  baseURL: 'http://localhost:4001/admin/api',
+  headers: {
+    Authorization: 'Bearer ' + localStorage.getItem('token')
+  }
 })
 
 

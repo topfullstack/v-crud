@@ -1,33 +1,55 @@
 <template>
   <div>
     <div>
-      <el-button v-bind="get(config, 'create.button')"
-      @click="showDialog(config.create, {})">{{get(config, 'create.button.label')}}</el-button>
+      <el-button
+        v-if="get(config, 'create') !== false"
+        v-bind="get(config, 'create.button')"
+        @click="showDialog(config.create, {})"
+        >{{ get(config, "create.button.label") }}</el-button>
     </div>
 
-    <div>
-      <h3>{{ get(config, "search.title", "搜索") }}</h3>
-      <DataForm v-model="searchModel" v-bind="config.search" @submit.native.prevent="search"></DataForm>
+    <div style="margin-top: 1rem;">
+      <h3 v-if="get(config, 'search.title')">
+        {{ get(config, "search.title") }}
+      </h3>
+      <DataForm
+        v-model="searchModel"
+        v-bind="config.search"
+        @submit.native.prevent="search"
+      ></DataForm>
     </div>
 
-    <el-table :data="data.data" @sort-change="sortChange">
-      <el-table-column v-bind="field" v-for="field in get(config, 'list.fields')" :key="field.prop">
+    <el-table :data="data.data" @sort-change="sortChange" v-bind="config.list">
+      <el-table-column
+        :label="get(field, 'label', field.prop.toUpperCase())"
+        v-bind="field"
+        v-for="field in get(config, 'list.fields')"
+        :key="field.prop"
+        :filters="field.filterable ? field.options : null"
+        :filter-method="field.filterable ? filter : null"
+      >
         <template v-slot="{ row }">
-          <DataValue v-bind="field" :value="row"></DataValue>
+          <slot :name="`prop:${field.prop}`" v-bind:row="row">
+            <DataValue :field="field" :value="row"></DataValue>
+          </slot>
         </template>
       </el-table-column>
       <el-table-column
-        v-bind="get(config, 'list.action.column', get(defaults, 'action.column'))"
-        v-slot="{row}"
+        v-bind="
+          get(config, 'list.action.column', get(defaults, 'action.column'))
+        "
+        v-slot="{ row, $index }"
       >
         <el-button
           v-bind="get(config, 'list.action.edit')"
-          @click="edit(row)"
-        >{{get(config, 'list.action.edit.label')}}</el-button>
+          @click="edit(row, $index)"
+          >{{ get(config, "list.action.edit.label") }}</el-button
+        >
         <el-button
           v-bind="get(config, 'list.action.delete')"
           @click="remove(row)"
-        >{{get(config, 'list.action.delete.label')}}</el-button>
+          >{{ get(config, "list.action.delete.label") }}</el-button
+        >
       </el-table-column>
     </el-table>
 
@@ -60,12 +82,13 @@
 </template>
 
 <script lang="ts">
-import merge from "deepmerge";
+import { merge, get, set, render } from "@/components/util";
 import DataValue from "./DataValue.vue";
 import DataForm from "./DataForm.vue";
 import DataTableDialog from "./DataTableDialog.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { get, set } from "dot-prop";
+
+import * as api from "../fake.config";
 
 @Component({
   components: { DataValue, DataForm, DataTableDialog }
@@ -92,23 +115,29 @@ export default class DataTable extends Vue {
 
   dialogConfig = {};
 
-  defaultSize = 'small'
+  defaultSize = "small";
   defaults = {
     create: {
       button: {
+        label: "创建",
         size: this.defaultSize,
-        type: 'success'
+        type: "success"
       },
       form: {
         method: "post",
         action: "users",
-        size: this.defaultSize,
+        size: this.defaultSize
       }
     },
     edit: {
       form: {
         method: "put",
-        action: "users/${row._id}"
+        action: "users/${_id}"
+      }
+    },
+    search: {
+      form: {
+        submitText: "搜索"
       }
     },
     list: {
@@ -153,7 +182,7 @@ export default class DataTable extends Vue {
 
   showDialog(config, model = {}) {
     this.dialogConfig = config;
-    this.model = model;
+    this.model = merge({}, model);
     this.isShowDialog = true;
   }
 
@@ -181,74 +210,13 @@ export default class DataTable extends Vue {
   async fetchConfig() {
     // const res = await this.$http.get(`${this.resource}/config`);
     const res = {
-      data: {
-        create: {
-          button: {
-            label: "创建用户"
-          },
-          dialog: {
-            is: "el-drawer",
-            title: "创建用户",
-            size: "80%"
-          },
-          form: {
-            labelWidth: "120px",
-            method: "post",
-            action: "users",
-            successMessage: "用户创建成功",
-            fields: [
-              { prop: "name", label: "姓名" },
-              { prop: "ID", label: "身份证" },
-              {
-                prop: "dob",
-                label: "生日",
-                type: "date",
-                valueFormat: "yyyy-MM-dd"
-              }
-            ]
-          }
-        },
-        edit: {
-          title: "更新用户",
-          form: {
-            labelWidth: "120px",
-
-            action: "users/${row._id}",
-            successMessage: "用户更新成功",
-            fields: [
-              { prop: "name", label: "姓名" },
-              { prop: "ID", label: "身份证" }
-            ]
-          }
-        },
-        search: {
-          title: "搜索用户",
-          submitText: "检索",
-          inline: true,
-          size: "small",
-          fields: [
-            { prop: "name", label: "姓名", regex: true },
-            { prop: "ID", label: "身份证" }
-          ]
-        },
-        list: {
-          pagination: {
-            pageSize: 2
-          },
-          fields: [
-            { prop: "_id", label: "ID", sortable: true, filterable: true },
-            { prop: "name", label: "姓名" },
-            {
-              prop: "createdAt",
-              label: "创建时间",
-              type: "datetime",
-              format: "yyyy-MM-dd HH:mm"
-            }
-          ]
-        }
-      }
+      data: api[this.resource]
     };
     this.config = merge(this.defaults, res.data);
+  }
+
+  async filter(value, row, column) {
+    return get(row, column.property) === value;
   }
 
   async search() {
@@ -256,7 +224,7 @@ export default class DataTable extends Vue {
     const cond = {};
     for (let k in where) {
       const val = where[k];
-      if (val === "") {
+      if (val === "" || val === null) {
         continue;
       }
       cond[k] = val;
@@ -266,17 +234,21 @@ export default class DataTable extends Vue {
       if (field.regex && val) {
         cond[k] = { $regex: val };
       }
+      if (Array.isArray(val) && val[0] instanceof Date) {
+        cond[k] = { $gte: val[0], $lt: val[1] };
+      }
     }
     this.query.where = cond;
+    this.query.page = 1;
     this.fetch();
   }
 
-  async edit(row) {
+  async edit(row, index) {
     const config = get(this.config, "edit", {});
     const action = get(config, "form.action", "");
-    // set(config, 'form.action', eval('return ' + action))
-    console.log(config, action);
-    // this.showDialog(config, row)
+    const actionUrl = render(action, { row, index }, {}, ["${", "}"]);
+    set(config, "form.action", actionUrl);
+    this.showDialog(config, row);
   }
 
   async remove(row) {
@@ -295,7 +267,8 @@ export default class DataTable extends Vue {
     this.fetch();
     this.$watch(
       "config.list.pagination",
-      ({ pageSize }) => {
+      page => {
+        const pageSize = get(page, "pageSize", 10);
         this.query.limit = pageSize;
         if (!get(this.config, "list.pagination")) {
           set(this.config, "list.pagination", {
