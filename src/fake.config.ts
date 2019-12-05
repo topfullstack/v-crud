@@ -6,7 +6,8 @@ export const users = {
     dialog: {
       tag: "el-drawer",
       title: "创建用户",
-      size: "80%"
+      size: "80%",
+      direction: "ltr"
     },
     form: {
       labelWidth: "120px",
@@ -119,13 +120,55 @@ export const users = {
 };
 
 export const courses = {
-  search: {},
+  title: "课程管理",
+  // tag: 'h2',
+  search: {
+    form: {
+      fields: [{ prop: "title", label: "标题", regex: true }]
+    }
+  },
+  create: {
+    dialog: {
+      title: "创建课程",
+    },
+    form: {
+      labelWidth: '100px',
+      fields: [
+        { prop: "title", label: "标题" },
+        {
+          prop: "cover",
+          label: "封面图",
+          tag: "upload-field",
+          action: "/upload"
+        }
+      ]
+    }
+  },
+  edit: {
+    dialog: {
+      tag: "el-drawer",
+      title: "编辑课程",
+      size: "50%",
+      direction: "ltr"
+    },
+    form: {
+      fields: [
+        { prop: "title", label: "标题" },
+        {
+          prop: "cover",
+          label: "封面图",
+          tag: "upload-field",
+          action: "https://jsonplaceholder.typicode.com/posts/"
+        }
+      ]
+    }
+  },
   list: {
-    title: '课程管理',
+    title: "课程管理",
     fields: [
-      { prop: "_id", label: 'ID', width: 220 },
-      { prop: "title", label: '标题' },
-      { prop: "posts.length", value: '${row.posts.length}', label: "音频数量" },
+      { prop: "_id", label: "ID", width: 220 },
+      { prop: "title", label: "标题" },
+      { prop: "posts.length", value: "${row.posts.length}", label: "音频数量" },
       { prop: "price", label: "价格(值币)" },
       { prop: "user.username", label: "老师" },
       {

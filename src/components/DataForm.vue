@@ -70,9 +70,13 @@ export default class DataForm extends Vue {
     }
     this.loading = true;
     const { action, method = "post", successMessage } = this.$attrs;
-    const res = await this.$http[method](action, this.value);
-    successMessage && this.$message.success(successMessage);
-    this.$emit("success", res.data);
+    try {
+      const res = await this.$http[method](action, this.value);
+      successMessage && this.$message.success(successMessage);
+      this.$emit("success", res.data);
+    } catch(e) {
+      this.$message.error(`出错了： ${e.message}`)
+    }
     this.loading = false;
   }
 }

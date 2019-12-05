@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="data-table">
+    <h3 v-if="get(config, 'title')" :is="get(config, 'tag', 'h3')">{{get(config, 'title')}}</h3>
     <div>
       <el-button
         v-if="get(config, 'create.form.fields')"
@@ -14,7 +15,8 @@
       </h3>
       <DataForm
         v-model="searchModel"
-        v-bind="config.search"
+        v-bind="get(config, 'search.form')"
+        inline
         @submit.native.prevent="search"
       ></DataForm>
     </div>
@@ -56,7 +58,6 @@
     </el-table>
 
     <el-pagination
-      style="margin-top:1rem;"
       @size-change="
         val => {
           query.limit = val;
@@ -127,14 +128,14 @@ export default class DataTable extends Vue {
       },
       form: {
         method: "post",
-        action: "users",
+        action: this.resource,
         size: this.defaultSize
       }
     },
     edit: {
       form: {
         method: "put",
-        action: "users/${_id}"
+        action: `${this.resource}/\${row._id}`
       }
     },
     search: {
@@ -230,10 +231,10 @@ export default class DataTable extends Vue {
         continue;
       }
       cond[k] = val;
-      const field: any = get(this.config, "search.fields", []).find(
+      const field: any = get(this.config, "search.form.fields", []).find(
         (v: any) => v.prop === k
       );
-      if (field.regex && val) {
+      if (field && field.regex && val) {
         cond[k] = { $regex: val };
       }
       if (Array.isArray(val) && val[0] instanceof Date) {
@@ -248,7 +249,7 @@ export default class DataTable extends Vue {
   async edit(row, index) {
     const config = get(this.config, "edit", {});
     const action = get(config, "form.action", "");
-    const actionUrl = render(action, { row, index }, {}, ["${", "}"]);
+    const actionUrl = render(action, { row, index });
     set(config, "form.action", actionUrl);
     this.showDialog(config, row);
   }
@@ -265,7 +266,10 @@ export default class DataTable extends Vue {
   }
 
   created() {
+    
     this.fetchConfig();
+
+    this.showDialog(this.config.create, {})
     this.fetch();
     this.$watch(
       "config.list.pagination",
@@ -285,4 +289,13 @@ export default class DataTable extends Vue {
 }
 </script>
 
-<style></style>
+<style lang="scss">
+*{
+  outline: none;
+}
+.data-table {
+  .el-pagination{
+    margin-top: 20px;
+  }
+}
+</style>

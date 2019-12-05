@@ -1,9 +1,16 @@
 <template>
-  <el-radio-group v-if="['radio', 'radio-group', 'el-radio-group'].includes(field.is)" v-model="val">
-    <el-radio :label="option.value" v-for="option in field.options" :key="option.value">{{option.text}}</el-radio>
+  <el-radio-group
+    v-if="['radio', 'radio-group', 'el-radio-group'].includes(field.tag)"
+    v-model="val"
+  >
+    <el-radio
+      :label="option.value"
+      v-for="option in field.options"
+      :key="option.value"
+    >{{option.text}}</el-radio>
   </el-radio-group>
-  <el-input v-else v-model="val" v-bind="field" :is="field.tag || 'el-input'" ></el-input>
   
+  <el-input v-else v-model="val" v-bind="field" :is="field.tag || 'el-input'"></el-input>
 </template>
 
 <script lang="ts">
@@ -12,7 +19,12 @@ import dayjs from "dayjs";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { Field } from "../interfaces";
 
+import UploadField from './fields/UploadField.vue'
+
 @Component({
+  components: {
+    'upload-field': UploadField
+  },
   filters: {
     formatDate(val, format = "YYYY-MM-DD HH:mm:ss") {
       return dayjs(val).format(format);

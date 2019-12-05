@@ -1,7 +1,8 @@
 <template>
   <component
-    v-bind="$attrs"
-    :is="get($attrs, 'is', 'el-dialog')"
+    class="data-table-dialog"
+    v-bind="dialog"
+    :is="get(dialog, 'tag', 'el-dialog')"
     :visible="visible"
     @update:visible="val => $emit('update:visible', val)"
   >
@@ -12,14 +13,14 @@
 <script lang="ts">
 import DataForm from "./DataForm.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { get } from "dot-prop";
-import merge from "deepmerge";
+import { get, merge } from "./util";
 
 @Component({
   components: { DataForm }
 })
 export default class DataTableDialog extends Vue {
   @Prop(Boolean) visible!: boolean;
+  @Prop({}) dialog!: any;
   @Prop({}) form!: any;
 
   @Prop() value!: any;
@@ -30,7 +31,7 @@ export default class DataTableDialog extends Vue {
     return merge({}, this.value);
   }
 
-  set model(val) {
+  set model(val: any) {
     this.$emit("input", merge({}, val));
   }
 
@@ -40,3 +41,11 @@ export default class DataTableDialog extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.data-table-dialog {
+  .el-drawer__body {
+    padding: 20px;
+  }
+}
+</style>

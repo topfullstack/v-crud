@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { Field } from "@/interfaces";
 
+
 @Component<DataValue>({
   filters: {
     formatDate(val, format = "YYYY-MM-DD HH:mm:ss") {
@@ -26,7 +27,7 @@ export default class DataValue extends Vue {
   @Prop() value: any;
 
   get attrs() {
-    const attrs = merge({}, get(this.field, "attrs", {}));
+    const attrs: any = merge({}, get(this.field, "attrs", {}));
     for (let k in attrs) {
       attrs[k] = render(attrs[k], { row: this.value });
     }
