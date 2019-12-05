@@ -7,7 +7,7 @@ import './plugins/element'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios.create({
-  baseURL: 'http://localhost:3000'
+  baseURL: 'http://localhost:30002'
 })
 
 

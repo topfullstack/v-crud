@@ -1,20 +1,33 @@
 <template>
   <div>
     <div>
-      <el-button type="primary" @click="showDialog(config.create, {})">
-        {{ config.create.title }}
-      </el-button>
+      <el-button v-bind="get(config, 'create.button')"
+      @click="showDialog(config.create, {})">{{get(config, 'create.button.label')}}</el-button>
+    </div>
+
+    <div>
+      <h3>{{ get(config, "search.title", "搜索") }}</h3>
+      <DataForm v-model="searchModel" v-bind="config.search" @submit.native.prevent="search"></DataForm>
     </div>
 
     <el-table :data="data.data" @sort-change="sortChange">
-      <el-table-column
-        v-bind="field"
-        v-for="field in config.list.fields"
-        :key="field.prop"
-      >
+      <el-table-column v-bind="field" v-for="field in get(config, 'list.fields')" :key="field.prop">
         <template v-slot="{ row }">
           <DataValue v-bind="field" :value="row"></DataValue>
         </template>
+      </el-table-column>
+      <el-table-column
+        v-bind="get(config, 'list.action.column', get(defaults, 'action.column'))"
+        v-slot="{row}"
+      >
+        <el-button
+          v-bind="get(config, 'list.action.edit')"
+          @click="edit(row)"
+        >{{get(config, 'list.action.edit.label')}}</el-button>
+        <el-button
+          v-bind="get(config, 'list.action.delete')"
+          @click="remove(row)"
+        >{{get(config, 'list.action.delete.label')}}</el-button>
       </el-table-column>
     </el-table>
 
@@ -32,11 +45,10 @@
           fetch();
         }
       "
-      v-bind="get(config.list, 'page', defaultPagination)"
+      v-bind="get(config.list, 'page', defaults.pagination)"
       :current-page="currentPage"
       :total="total"
-    >
-    </el-pagination>
+    ></el-pagination>
 
     <DataTableDialog
       v-bind="dialogConfig"
@@ -48,11 +60,12 @@
 </template>
 
 <script lang="ts">
+import merge from "deepmerge";
 import DataValue from "./DataValue.vue";
 import DataForm from "./DataForm.vue";
 import DataTableDialog from "./DataTableDialog.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { get } from "dot-prop";
+import { get, set } from "dot-prop";
 
 @Component({
   components: { DataValue, DataForm, DataTableDialog }
@@ -67,67 +80,10 @@ export default class DataTable extends Vue {
   data: any = {};
 
   model = {};
+  searchModel = {};
   creating = false;
 
-  config = {
-    create: {
-      title: "创建用户",
-      dialog: {
-        is: "el-drawer",
-        size: "80%"
-      },
-      form: {
-        labelWidth: "120px",
-        method: "post",
-        action: "users",
-        successMessage: "用户创建成功",
-        fields: [
-          { prop: "name", label: "姓名" },
-          { prop: "ID", label: "身份证" },
-          {
-            prop: "dob",
-            label: "生日",
-            type: "date",
-            valueFormat: "yyyy-MM-dd"
-          }
-        ]
-      }
-    },
-    update: {
-      title: "更新用户",
-      form: {
-        labelWidth: "120px",
-        method: "put",
-        action: "users/${model._id}",
-        successMessage: "用户更新成功",
-        fields: [
-          { prop: "name", label: "姓名" },
-          { prop: "ID", label: "身份证" }
-        ]
-      }
-    },
-    search: {
-      fields: [
-        { prop: "name", label: "姓名" },
-        { prop: "ID", label: "身份证" }
-      ]
-    },
-    list: {
-      pagination: {
-        pageSize: 2
-      },
-      fields: [
-        { prop: "_id", label: "ID" },
-        { prop: "url", label: "URL" },
-        {
-          prop: "createdAt",
-          label: "创建时间",
-          type: "datetime",
-          format: "yyyy-MM-dd HH:mm"
-        }
-      ]
-    }
-  };
+  config: any = {};
   page: any = {
     total: 0
   };
@@ -136,7 +92,46 @@ export default class DataTable extends Vue {
 
   dialogConfig = {};
 
-  defaultPagination = {};
+  defaultSize = 'small'
+  defaults = {
+    create: {
+      button: {
+        size: this.defaultSize,
+        type: 'success'
+      },
+      form: {
+        method: "post",
+        action: "users",
+        size: this.defaultSize,
+      }
+    },
+    edit: {
+      form: {
+        method: "put",
+        action: "users/${row._id}"
+      }
+    },
+    list: {
+      action: {
+        column: {
+          label: "操作",
+          width: "220px"
+        },
+        edit: {
+          type: "text",
+          label: "编辑",
+          icon: "el-icon-edit",
+          size: this.defaultSize
+        },
+        delete: {
+          type: "text",
+          label: "删除",
+          icon: "el-icon-delete",
+          size: this.defaultSize
+        }
+      }
+    }
+  };
 
   get pageSizes() {
     return get(this.config.list, "page.pageSizes", [
@@ -184,11 +179,80 @@ export default class DataTable extends Vue {
   }
 
   async fetchConfig() {
-    const res = await this.$http.get(`${this.resource}/config`);
-    this.config = res.data;
+    // const res = await this.$http.get(`${this.resource}/config`);
+    const res = {
+      data: {
+        create: {
+          button: {
+            label: "创建用户"
+          },
+          dialog: {
+            is: "el-drawer",
+            title: "创建用户",
+            size: "80%"
+          },
+          form: {
+            labelWidth: "120px",
+            method: "post",
+            action: "users",
+            successMessage: "用户创建成功",
+            fields: [
+              { prop: "name", label: "姓名" },
+              { prop: "ID", label: "身份证" },
+              {
+                prop: "dob",
+                label: "生日",
+                type: "date",
+                valueFormat: "yyyy-MM-dd"
+              }
+            ]
+          }
+        },
+        edit: {
+          title: "更新用户",
+          form: {
+            labelWidth: "120px",
+
+            action: "users/${row._id}",
+            successMessage: "用户更新成功",
+            fields: [
+              { prop: "name", label: "姓名" },
+              { prop: "ID", label: "身份证" }
+            ]
+          }
+        },
+        search: {
+          title: "搜索用户",
+          submitText: "检索",
+          inline: true,
+          size: "small",
+          fields: [
+            { prop: "name", label: "姓名", regex: true },
+            { prop: "ID", label: "身份证" }
+          ]
+        },
+        list: {
+          pagination: {
+            pageSize: 2
+          },
+          fields: [
+            { prop: "_id", label: "ID", sortable: true, filterable: true },
+            { prop: "name", label: "姓名" },
+            {
+              prop: "createdAt",
+              label: "创建时间",
+              type: "datetime",
+              format: "yyyy-MM-dd HH:mm"
+            }
+          ]
+        }
+      }
+    };
+    this.config = merge(this.defaults, res.data);
   }
 
-  async search(where) {
+  async search() {
+    const where = { ...this.searchModel };
     const cond = {};
     for (let k in where) {
       const val = where[k];
@@ -196,13 +260,23 @@ export default class DataTable extends Vue {
         continue;
       }
       cond[k] = val;
-      const field: any = this.config.list.fields.find(v => v.prop === k);
+      const field: any = get(this.config, "search.fields", []).find(
+        (v: any) => v.prop === k
+      );
       if (field.regex && val) {
         cond[k] = { $regex: val };
       }
     }
     this.query.where = cond;
     this.fetch();
+  }
+
+  async edit(row) {
+    const config = get(this.config, "edit", {});
+    const action = get(config, "form.action", "");
+    // set(config, 'form.action', eval('return ' + action))
+    console.log(config, action);
+    // this.showDialog(config, row)
   }
 
   async remove(row) {
@@ -217,17 +291,21 @@ export default class DataTable extends Vue {
   }
 
   created() {
-    // this.fetchConfig();
+    this.fetchConfig();
     this.fetch();
-    this.$watch("config.list.pagination", ({
-      pageSize
-    }) => {
-      this.query.limit = pageSize
-      this.defaultPagination = {
-        pageSize,
-        pageSizes: [pageSize]
-      }
-    }, { deep: true, immediate: true });
+    this.$watch(
+      "config.list.pagination",
+      ({ pageSize }) => {
+        this.query.limit = pageSize;
+        if (!get(this.config, "list.pagination")) {
+          set(this.config, "list.pagination", {
+            pageSize,
+            pageSizes: [pageSize]
+          });
+        }
+      },
+      { deep: true, immediate: true }
+    );
   }
 }
 </script>
