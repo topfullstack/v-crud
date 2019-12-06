@@ -1,20 +1,23 @@
 <template>
-  <span v-if="field.options">{{ getOptionLabel(val) }}</span>
-  <span v-else-if="isDate">{{ val | formatDate }}</span>
+  <span v-if="isDate">{{ val | formatDate(field.format) }}</span>
+  <el-tooltip v-else-if="field.prop === '_id'" :content="val"  placement="left">
+    <el-tag size="small">{{ val.substr(-4) }}</el-tag>
+  </el-tooltip>
+  <span v-else-if="field.options">{{ getOptionLabel(val) }}</span>
   <span v-else :is="field.tag || 'span'" v-bind="attrs">{{ val }}</span>
 </template>
 
 <script lang="ts">
 import { merge, get, set, render } from "@/components/util";
-import dayjs from "dayjs";
+import * as dateFns from "date-fns";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { Field } from "@/interfaces";
 
 
 @Component<DataValue>({
   filters: {
-    formatDate(val, format = "YYYY-MM-DD HH:mm:ss") {
-      return dayjs(val).format(format);
+    formatDate(val, format = "yyyy-MM-DD HH:mm:ss") {
+      return dateFns.format(dateFns.parseJSON(val), format)
     }
   }
 })

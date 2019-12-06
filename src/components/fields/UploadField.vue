@@ -39,6 +39,7 @@ $height: 178px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  max-height: 10em;
 }
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
@@ -48,12 +49,13 @@ $height: 178px;
   color: #8c939d;
   width: $height;
   height: $height;
-  line-height: $height;
+  line-height: $height !important;
   text-align: center;
 }
 .avatar {
-  max-width: 100%;
-  max-height: 100%;
-  display: inline-block;
+  width: auto;
+  height: 100%;
+  max-height: 10em;
+  display: block;
 }
 </style>

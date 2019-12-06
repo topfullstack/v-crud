@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './plugins/element'
 import App from './App.vue'
 import router from './router'
 
 import axios from 'axios'
-import './plugins/element'
+
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios.create({

@@ -1,10 +1,10 @@
 export const users = {
-  create1: {
+  create: {
     button: {
       label: "创建用户"
     },
     dialog: {
-      tag: "el-drawer",
+      // tag: "el-drawer",
       title: "创建用户",
       size: "80%",
       direction: "ltr"
@@ -21,8 +21,8 @@ export const users = {
           label: "角色",
           tag: "el-radio-group",
           options: [
-            { text: "讲师", value: 1 },
-            { text: "用户", value: 2 }
+            { label: "讲师", value: 1 },
+            { label: "用户", value: 2 }
           ]
         },
         {
@@ -49,8 +49,8 @@ export const users = {
           label: "角色",
           tag: "el-radio-group",
           options: [
-            { text: "讲师", value: 1 },
-            { text: "用户", value: 2 }
+            { label: "讲师", value: 1 },
+            { label: "用户", value: 2 }
           ]
         },
         {
@@ -101,8 +101,8 @@ export const users = {
         label: "角色",
         filterable: true,
         options: [
-          { text: "讲师", value: 1 },
-          { text: "用户", value: 2 }
+          { label: "讲师", value: 1 },
+          { label: "用户", value: 2 }
         ]
       },
       {
@@ -133,12 +133,19 @@ export const courses = {
     },
     form: {
       labelWidth: "100px",
+      tabs: true,
       fields: [
-        { prop: "title", label: "标题" },
         {
-          prop: "cover",
-          label: "封面图",
-          tag: "upload-field"
+          prop: "basic",
+          label: "基础信息",
+          children: [
+            { prop: "title", label: "标题" },
+            {
+              prop: "cover",
+              label: "封面图",
+              tag: "upload-field"
+            }
+          ]
         }
       ]
     }
@@ -152,19 +159,39 @@ export const courses = {
     },
     form: {
       labelWidth: "100px",
+      tabs: true,
       fields: [
-        { prop: "title", label: "标题" },
         {
-          prop: "posts",
-          label: "音频",
-          tag: "el-select",
-          options: [{ text: "课程1", value: "1" }]
+          prop: "basic",
+          label: "基础信息",
+          children: [
+            { prop: "title", label: "标题" },
+            {
+              prop: "posts",
+              label: "音频",
+              tag: "el-select",
+              filterable: true,
+              multiple: true,
+              options: [{ label: "课程1", value: "1" }]
+            },
+            {
+              prop: "cover",
+              label: "封面图",
+              tag: "upload-field"
+            },
+            
+          ]
         },
         {
-          prop: "cover",
-          label: "封面图",
-          tag: "upload-field"
-        }
+          prop: "content",
+          label: "详情",
+          children: [
+            { prop: "content1", label: "详情1", tag: 'html-editor-field' },
+            
+          ]
+        },
+        
+        
       ]
     }
   },
