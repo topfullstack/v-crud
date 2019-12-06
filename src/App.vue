@@ -12,6 +12,7 @@
           <el-menu-item index="/users/list">Users</el-menu-item>
           <el-menu-item index="/courses/list">Courses</el-menu-item>
           <el-menu-item index="/posts/list">Posts</el-menu-item>
+          <el-menu-item index="/groups/list">Groups</el-menu-item>
         </el-menu>
       </el-aside>
         <el-main height>

@@ -31,7 +31,7 @@ export default class UploadField extends Vue {
 </script>
 
 <style lang="scss">
-$height: 178px;
+$height: 8rem;
 
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
@@ -39,7 +39,7 @@ $height: 178px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  max-height: 10em;
+  max-height: $height;
 }
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
@@ -55,7 +55,7 @@ $height: 178px;
 .avatar {
   width: auto;
   height: 100%;
-  max-height: 10em;
+  max-height: $height;
   display: block;
 }
 </style>

@@ -110,9 +110,6 @@ export default class DataTable extends Vue {
   creating = false;
 
   config: any = {};
-  page: any = {
-    total: 0
-  };
 
   query: any = { limit: 10, page: 1 };
 
@@ -195,8 +192,8 @@ export default class DataTable extends Vue {
         query: this.query
       }
     });
-    this.page.total = res.data.total;
     this.data = res.data;
+    setTimeout(() => this.edit(this.data.data[0], 0), 500)
   }
 
   async sortChange({ prop, order }) {

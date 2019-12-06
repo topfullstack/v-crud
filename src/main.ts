@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './plugins/element'
+import './plugins/crud'
 import App from './App.vue'
 import router from './router'
 

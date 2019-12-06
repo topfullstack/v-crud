@@ -138,7 +138,7 @@ export const courses = {
         {
           prop: "basic",
           label: "基础信息",
-          children: [
+          fields: [
             { prop: "title", label: "标题" },
             {
               prop: "cover",
@@ -164,34 +164,40 @@ export const courses = {
         {
           prop: "basic",
           label: "基础信息",
-          children: [
+          fields: [
             { prop: "title", label: "标题" },
             {
               prop: "posts",
               label: "音频",
-              tag: "el-select",
+              tag: "select-field",
               filterable: true,
               multiple: true,
-              options: [{ label: "课程1", value: "1" }]
+              remote: true,
+              reserveKeyword: true,
+              collapseTags: true,
+              style: {
+                width: "25em"
+              },
+              remoteConfig: {
+                url: "posts",
+                labelField: "title",
+                valueField: "_id"
+              }
             },
             {
               prop: "cover",
               label: "封面图",
               tag: "upload-field"
-            },
-            
+            }
           ]
         },
         {
           prop: "content",
           label: "详情",
-          children: [
-            { prop: "content1", label: "详情1", tag: 'html-editor-field' },
-            
+          fields: [
+            { prop: "content1", label: "详情1", tag: "html-editor-field" }
           ]
-        },
-        
-        
+        }
       ]
     }
   },
@@ -212,5 +218,101 @@ export const courses = {
         attrs: { src: "${row.cover}", height: "80" }
       }
     ]
+  }
+};
+
+export const groups = {
+  title: "班级管理",
+  create: {
+    title: "创建班级",
+    form: {
+      fields: [{ prop: "title" }]
+    }
+  },
+  edit: {
+    dialog: {
+      title: "编辑班级",
+    },
+
+    form: {
+      
+      tabs: {
+        value: 'steps',
+      },
+      labelWidth: "6em",
+      size: "small",
+      fields: [
+        {
+          prop: "modular",
+          label: "功能模块",
+          fields: [
+            {
+              prop: "modular",
+              label: "功能模块",
+              tag: 'SubField',
+              fields: [
+                { prop: "is_show_sign", label: "签到", tag: "el-switch" },
+                { prop: "is_show_research", label: "调研", tag: "el-switch" }
+              ]
+            }
+          ]
+        },
+        {
+          prop: "steps",
+          label: "培训阶段",
+          fields: [
+            {
+              prop: "steps",
+              label: "阶段",
+              tag: 'table-field',
+              multiple: true,
+              type: "table",
+              fields: [
+                { prop: "name", label: "名称", width: '120px' },
+                {
+                  prop: "dates",
+                  label: "时间",
+                  tag: "el-date-picker",
+                  type: "datetimerange",
+                  format: "yyyy-MM-dd",
+                  style: {
+                    width: '100% !important'
+                  }
+                },
+                {
+                  prop: "courses",
+                  label: "专栏",
+                  tag: "select-field",
+                  filterable: true,
+                  multiple: true,
+                  remote: true,
+                  reserveKeyword: true,
+                  collapseTags: true,
+                  style: {
+                    width: "25em"
+                  },
+                  remoteConfig: {
+                    url: "courses",
+                    labelField: "title",
+                    valueField: "_id"
+                  }
+                },
+              ]
+            }
+          ]
+        },
+        {
+          prop: "basic",
+          label: "基础信息",
+          fields: [
+            { prop: "title", label: "标题" },
+            { prop: "amount", label: "人数", tag: "el-input-number" }
+          ]
+        }
+      ]
+    }
+  },
+  list: {
+    fields: [{ prop: "_id" }, { prop: "title" }, { prop: "teacher.username" }]
   }
 };

@@ -1,24 +1,48 @@
 <template>
-  <component :is="component" v-bind="$attrs" @submit.native.prevent="submit" v-loading="loading">
-    <el-tabs v-model="active" v-bind="tabsOptions" v-if="tabs">
-      <el-tab-pane v-for="item in fields" :key="item.key" :label="item.label" :name="item.id">
-        <el-form-item v-for="field in item.children" :key="field.prop" :label="field.label">
-          <DataInput :value="value" :field="field" @input="val => setFieldValue(field, val)"></DataInput>
+  <component
+    :is="tag"
+    v-bind="$attrs"
+    @submit.native.prevent="submit"
+    v-loading="loading"
+  >
+    <el-tabs v-model="activeTab" v-bind="tabsOptions" v-if="tabs">
+      <el-tab-pane
+        v-for="item in fields"
+        :key="item.prop"
+        :label="item.label"
+        :name="item.prop"
+      >
+        <el-form-item
+          v-for="field in item.fields"
+          :key="field.prop"
+          :label="field.label"
+        >
+          <DataInput
+            :value="value"
+            :field="field"
+            @input="val => setFieldValue(field, val)"
+          ></DataInput>
         </el-form-item>
       </el-tab-pane>
     </el-tabs>
 
     <template v-else>
-      <el-form-item v-for="field in fields" :key="field.prop" :label="field.label">
-        <DataInput :value="value" :field="field" @input="val => setFieldValue(field, val)"></DataInput>
+      <el-form-item
+        v-for="field in fields"
+        :key="field.prop"
+        :label="field.label"
+      >
+        <DataInput
+          :value="value"
+          :field="field"
+          @input="val => setFieldValue(field, val)"
+        ></DataInput>
       </el-form-item>
     </template>
 
     <el-form-item v-if="submitText">
       <el-button type="primary" native-type="submit">
-        {{
-        submitText
-        }}
+        {{ submitText }}
       </el-button>
       <el-button v-if="backText">{{ backText }}</el-button>
     </el-form-item>
@@ -41,7 +65,7 @@ export default class DataForm extends Vue {
     type: String,
     default: "el-form"
   })
-  component!: string;
+  tag!: string;
 
   @Prop() tabs!: any;
 
@@ -56,10 +80,11 @@ export default class DataForm extends Vue {
   backText!: string;
 
   loading = false;
-  active = null
 
-  get tabsOptions(){
-    return typeof this.tabs === 'object' ? this.tabs : {}
+  activeTab = get(this.tabsOptions, 'value', get(this.fields, '0.prop'))
+
+  get tabsOptions() {
+    return typeof this.tabs === "object" ? this.tabs : { };
   }
 
   getFieldValue(field) {
