@@ -293,7 +293,7 @@ export default class DataTable extends Vue {
   }
 
   mounted() {
-    this.defaults = merge({}, this.localDefaults, this.$crudDefaults);
+    this.defaults = merge({}, this.localDefaults, (this as any).$crudDefaults);
     this.$watch(
       "config",
       config => {
