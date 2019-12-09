@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { merge, get, set, render } from "@/components/util";
+import { merge, get, set, template } from "@/components/util";
 import DataValue from "./DataValue.vue";
 import DataForm from "./DataForm.vue";
 import DataTableDialog from "./DataTableDialog.vue";
@@ -216,13 +216,13 @@ export default class DataTable extends Vue {
     const config = get(this.localConfig, "edit", {});
     let { fetchUrl } = config;
     if (fetchUrl) {
-      fetchUrl = render(fetchUrl, { row, index });
+      fetchUrl = template(fetchUrl)({ row, index });
       const res = await this.$http.get(fetchUrl);
       row = res.data;
     }
 
     const action = get(config, "form.action", "");
-    const actionUrl = render(action, { row, index });
+    const actionUrl = template(action)({ row, index });
     set(config, "form.action", actionUrl);
     this.showDialog(config, row);
   }

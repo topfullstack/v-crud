@@ -1,10 +1,13 @@
 {
   "name": "vue-crud",
   "version": "0.1.0",
-  "private": true,
+  "main": "dist/vue-crud.umd.js",
+  "main1": "dist/vue-crud.umd.js",
+
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name VueCrud",
+    "build": "vue-cli-service build",
+    "lib": "vue-cli-service build --target lib --name vue-crud src/plugins/crud.ts",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },

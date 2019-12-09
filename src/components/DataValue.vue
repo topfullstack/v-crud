@@ -39,16 +39,13 @@
 </template>
 
 <script lang="ts">
-import { merge, get, set, render } from "@/components/util";
-import * as dateFns from "date-fns";
+import { merge, get, set, template, formatDate } from "@/components/util";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { Field } from "@/interfaces";
 
 @Component<DataValue>({
   filters: {
-    formatDate(val, format = "yyyy-MM-DD HH:mm:ss") {
-      return dateFns.format(dateFns.parseJSON(val), format);
-    }
+    formatDate
   }
 })
 export default class DataValue extends Vue {
@@ -66,7 +63,7 @@ export default class DataValue extends Vue {
   get attrs() {
     const attrs: any = merge({}, get(this.field, "attrs", {}));
     for (let k in attrs) {
-      attrs[k] = render(attrs[k], { row: this.value });
+      attrs[k] = template(attrs[k])({ row: this.value });
     }
     return attrs;
   }
@@ -83,7 +80,7 @@ export default class DataValue extends Vue {
     if (typeof val !== "string") {
       return val;
     }
-    return render(val, { row: this.value });
+    return template(val)({ row: this.value });
   }
 
   get isDate() {

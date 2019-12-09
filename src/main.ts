@@ -1,9 +1,13 @@
 import Vue from 'vue'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import './plugins/element'
-import './plugins/crud'
+import VueCrud from  './plugins/crud'
+
+// import VueCrud from '../dist/vue-crud.umd.js'
 import App from './App.vue'
 import router from './router'
+
+Vue.use(VueCrud)
 
 import QrcodeVue from 'qrcode.vue'
 Vue.component('vue-qrcode', QrcodeVue)
