@@ -1,9 +1,9 @@
-import deepMerge from "deepmerge";
-export { get, set } from "dot-prop";
-import * as mustache from 'micromustache'
+// import deepMerge from "deepmerge";
+// export { get, set } from "dot-prop";
+// import * as mustache from 'micromustache'
 
-export const merge = deepMerge
-export const render = (template, view) => mustache.render(template, view, {
-  tags: ["${", "}"]
-})
+import * as _ from "lodash";
+export { get, set, merge, pick, uniqBy } from "lodash";
 
+// export const merge = deepMerge
+export const render = (view, data) => _.template(view)(data);

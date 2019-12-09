@@ -48,7 +48,7 @@ export default class TableField extends Vue {
   @Prop() value!: any;
   @Prop() fields!: any[];
 
-  localValue: [];
+  localValue:any = [];
 
   getFieldValue(field) {
     return get(this.localValue, field.prop);
@@ -71,7 +71,7 @@ export default class TableField extends Vue {
   }
 
   beforeCreate() {
-    this.$options.components.DataInput = () => import("../DataInput.vue");
+    (this.$options.components as any).DataInput = () => import("../DataInput.vue");
   }
 }
 </script>

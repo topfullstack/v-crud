@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-form-item
+      v-bind="getFormItemOptions(field)"
       v-for="field in fields"
       :key="field.prop"
-      :label="field.label || String(field.prop).toUpperCase()"
     >
       <DataInput
         :value="value"
@@ -17,7 +17,7 @@
 <script lang="ts">
 
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { get, merge } from "../util";
+import { get, merge, pick } from "../util";
 
 @Component({})
 export default class SubField extends Vue {
@@ -32,8 +32,12 @@ export default class SubField extends Vue {
     this.$emit("input", { ...this.value, [field.prop]: value });
   }
 
+  getFormItemOptions(field){
+    return pick(field, ['prop', 'label','required', 'labelWidth', 'rules', ''])
+  }
+
   beforeCreate(){
-    this.$options.components.DataInput = () => import('../DataInput.vue')
+    (this.$options.components as any).DataInput = () => import('../DataInput.vue')
   }
 }
 </script>

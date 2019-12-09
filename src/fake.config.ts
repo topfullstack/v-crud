@@ -126,6 +126,7 @@ export const courses = {
     }
   },
   create: {
+    
     dialog: {
       title: "创建课程"
     },
@@ -149,6 +150,7 @@ export const courses = {
     }
   },
   edit: {
+    fetchUrl: 'courses/${row._id}',
     dialog: {
       // tag: "el-drawer",
       title: "编辑课程",
@@ -158,6 +160,7 @@ export const courses = {
     form: {
       labelWidth: "100px",
       tabs: true,
+      size: 'small',
       rules: {
         title: [{ required: true, message: "请填写标题" }]
       },
@@ -165,12 +168,14 @@ export const courses = {
         {
           prop: "basic",
           label: "基础信息",
+          
           fields: [
             {
               prop: "title",
               label: "标题",
               placeholder: "课程标题",
-              hint: "30字以内"
+              hint: "30字以内",
+              span: 12,
             },
             {
               prop: "posts",
@@ -188,12 +193,15 @@ export const courses = {
                 url: "posts",
                 labelField: "title",
                 valueField: "_id"
-              }
+              },
+              span: 12,
+              row: true,
             },
             {
               prop: "cover",
               label: "封面图",
-              tag: "upload-field"
+              tag: "upload-field",
+              span: 12
             }
           ]
         },
@@ -237,7 +245,9 @@ export const groups = {
   },
   edit: {
     dialog: {
-      title: "编辑班级"
+      title: "编辑班级",
+      tag: "el-drawer",
+      size: "90%"
     },
 
     form: {
@@ -269,9 +279,10 @@ export const groups = {
             {
               prop: "steps",
               label: "阶段",
-              tag: "table-field",
+              tag: "card-field",
               multiple: true,
-              type: "table",
+              labelWidth: 0,
+              span: 8,
               fields: [
                 { prop: "name", label: "名称", width: "120px" },
                 {
@@ -294,12 +305,20 @@ export const groups = {
                   reserveKeyword: true,
                   collapseTags: true,
                   style: {
-                    width: "25em"
+                    width: "100%"
                   },
                   remoteConfig: {
                     url: "courses",
                     labelField: "title",
-                    valueField: "_id"
+                    valueField: "_id",
+                    options: {
+                      where: {
+                        title: { $regex: "^6" }
+                      },
+                      sort: {
+                        _id: -1
+                      }
+                    }
                   }
                 }
               ]
@@ -318,14 +337,55 @@ export const groups = {
     }
   },
   list: {
-    fields: [{ prop: "_id" }, { prop: "title" }, { prop: "teacher.username" }]
+    fields: [
+      { prop: "_id" },
+      { prop: "title" },
+      { prop: "teacher.username" },
+      {
+        prop: "logo",
+        tag: "el-image",
+        width: "100px",
+        dialog: {
+          title: "预览",
+          width: "20rem"
+        },
+        attrs: {
+          src: "${row.logo}",
+          fit: "cover"
+        }
+      },
+      {
+        prop: "qrcode",
+        tag: "vue-qrcode",
+        dialog: {
+          title: "二维码",
+          width: "20rem",
+          center: true,
+          alert: {
+            title: "扫码加入班级",
+            showIcon: true
+          }
+        },
+        attrs: {
+          size: 100,
+          value: "http://www.baidu.com/s?wd=${row.title}"
+        }
+      }
+    ]
   }
 };
 
 export const posts = {
   title: "音频管理",
   list: {
-    fields: [{ prop: "title", label: "标题" }]
+    action: {
+      
+
+    },
+    fields: [{ prop: "title", label: "标题" }],
+  },
+  create: {
+    fields: [{ prop: "title", label: "标题", regex: true }]
   },
   search: {
     form: {
@@ -347,8 +407,17 @@ export const posts = {
           label: "音频/视频",
           tag: "upload-field",
           preview: {
-            tag: 'a'
+            tag: "a"
           }
+        },
+        {
+          prop: "tags",
+          label: "TAGS",
+          tag: "select-field",
+          multiple: true,
+          filterable: true,
+          allowCreate: true,
+          defaultFirstOption: true,
         }
       ]
     }

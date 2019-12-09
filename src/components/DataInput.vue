@@ -22,6 +22,7 @@ import UploadField from "./fields/UploadField.vue";
 import HtmlEditorField from "./fields/HtmlEditorField.vue";
 import SubField from "./fields/SubField.vue";
 import TableField from "./fields/TableField.vue";
+import CardField from "./fields/CardField.vue";
 import SelectField from "./fields/SelectField.vue";
 
 @Component({
@@ -30,7 +31,8 @@ import SelectField from "./fields/SelectField.vue";
     HtmlEditorField,
     SubField,
     TableField,
-    SelectField
+    SelectField,
+    CardField
   },
   filters: {
     formatDate(val, format = "YYYY-MM-DD HH:mm:ss") {

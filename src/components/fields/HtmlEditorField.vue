@@ -1,5 +1,6 @@
 <template>
   <vue-editor
+    v-bind="$attrs"
     :value="value"
     @input="val => $emit('input', val)"
     useCustomImageHandler

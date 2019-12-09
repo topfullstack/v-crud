@@ -5,6 +5,9 @@ import './plugins/crud'
 import App from './App.vue'
 import router from './router'
 
+import QrcodeVue from 'qrcode.vue'
+Vue.component('vue-qrcode', QrcodeVue)
+
 import axios from 'axios'
 
 

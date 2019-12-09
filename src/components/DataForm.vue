@@ -15,19 +15,22 @@
         :label="item.label"
         :name="item.prop"
       >
-        <el-form-item
-          v-for="field in item.fields"
-          :key="field.prop"
-          :prop="field.prop"
-          :label="field.label"
-        >
-          <DataInput
-            :value="value"
-            :field="field"
-            @input="val => setFieldValue(field, val)"
-          ></DataInput>
-          <div class="hint" v-html="field.hint"></div>
-        </el-form-item>
+        <el-row type="flex" style="flex-wrap: wrap;">
+          <el-col
+            :span="field.span"
+            v-for="field in item.fields"
+            :key="field.prop"
+          >
+            <el-form-item v-bind="getFormItemOptions(field)">
+              <DataInput
+                :value="value"
+                :field="field"
+                @input="val => setFieldValue(field, val)"
+              ></DataInput>
+              <div class="hint" v-html="field.hint"></div>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-tab-pane>
     </el-tabs>
 
@@ -35,8 +38,7 @@
       <el-form-item
         v-for="field in fields"
         :key="field.prop"
-        :label="field.label"
-        :prop="field.prop"
+        v-bind="getFormItemOptions(field)"
       >
         <DataInput
           :value="value"
@@ -57,10 +59,10 @@
 
 <script lang="ts">
 import DataInput from "./DataInput.vue";
-import { get } from "dot-prop";
+import { get, merge, pick } from "./util";
 
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { ElForm } from 'element-ui/types/form';
+import { ElForm } from "element-ui/types/form";
 
 @Component({
   components: {
@@ -88,10 +90,10 @@ export default class DataForm extends Vue {
 
   loading = false;
 
-  activeTab = get(this.tabsOptions, 'value', get(this.fields, '0.prop'))
+  activeTab = get(this.tabsOptions, "value", get(this.fields, "0.prop"));
 
   get tabsOptions() {
-    return typeof this.tabs === "object" ? this.tabs : { };
+    return typeof this.tabs === "object" ? this.tabs : {};
   }
 
   getFieldValue(field) {
@@ -102,6 +104,17 @@ export default class DataForm extends Vue {
     this.$emit("input", { ...this.value, [field.prop]: value });
   }
 
+  getFormItemOptions(field) {
+    return pick(field, [
+      "prop",
+      "label",
+      "required",
+      "labelWidth",
+      "rules",
+      ""
+    ]);
+  }
+
   async submit() {
     const { action, method = "post", successMessage, rules } = this.$attrs;
     if (!action) {
@@ -109,9 +122,9 @@ export default class DataForm extends Vue {
     }
     if (rules) {
       try {
-        await (this.$refs.form as ElForm).validate()
-      } catch(e){
-        return false
+        await (this.$refs.form as ElForm).validate();
+      } catch (e) {
+        return false;
       }
     }
     this.loading = true;
