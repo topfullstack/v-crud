@@ -1,9 +1,5 @@
 <template>
-  <component
-    v-model="val"
-    v-bind="field"
-    :is="tag"
-  >
+  <component v-model="val" v-bind="field" :is="tag">
     <template v-if="subTag">
       <component
         :is="subTag"
@@ -11,9 +7,7 @@
         :value="isCheckboxOrRadio ? undefined : option.value"
         v-for="option in localOptions"
         :key="option.value"
-      >
-        {{ option.label }}
-      </component>
+      >{{ option.label }}</component>
     </template>
   </component>
 </template>
@@ -92,7 +86,6 @@ export default class DataInput extends Vue {
 
   get subTag() {
     const tags = {
-      object: "DataInput",
       "el-radio-group": "el-radio",
       "el-checkbox-group": "el-checkbox",
       "el-select": "el-option"
@@ -115,10 +108,6 @@ export default class DataInput extends Vue {
   set val(value) {
     this.$emit("input", value);
   }
-
-  
-
-  
 }
 </script>
 

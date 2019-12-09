@@ -1,9 +1,12 @@
 <template>
   <component
+    class="data-form"
     :is="tag"
     v-bind="$attrs"
     @submit.native.prevent="submit"
     v-loading="loading"
+    ref="form"
+    :model="value"
   >
     <el-tabs v-model="activeTab" v-bind="tabsOptions" v-if="tabs">
       <el-tab-pane
@@ -15,6 +18,7 @@
         <el-form-item
           v-for="field in item.fields"
           :key="field.prop"
+          :prop="field.prop"
           :label="field.label"
         >
           <DataInput
@@ -22,6 +26,7 @@
             :field="field"
             @input="val => setFieldValue(field, val)"
           ></DataInput>
+          <div class="hint" v-html="field.hint"></div>
         </el-form-item>
       </el-tab-pane>
     </el-tabs>
@@ -31,6 +36,7 @@
         v-for="field in fields"
         :key="field.prop"
         :label="field.label"
+        :prop="field.prop"
       >
         <DataInput
           :value="value"
@@ -54,6 +60,7 @@ import DataInput from "./DataInput.vue";
 import { get } from "dot-prop";
 
 import { Vue, Component, Prop } from "vue-property-decorator";
+import { ElForm } from 'element-ui/types/form';
 
 @Component({
   components: {
@@ -96,11 +103,18 @@ export default class DataForm extends Vue {
   }
 
   async submit() {
-    if (!this.$attrs.action) {
+    const { action, method = "post", successMessage, rules } = this.$attrs;
+    if (!action) {
       return;
     }
+    if (rules) {
+      try {
+        await (this.$refs.form as ElForm).validate()
+      } catch(e){
+        return false
+      }
+    }
     this.loading = true;
-    const { action, method = "post", successMessage } = this.$attrs;
     try {
       const res = await this.$http[method](action, this.value);
       successMessage && this.$message.success(successMessage);
@@ -113,4 +127,11 @@ export default class DataForm extends Vue {
 }
 </script>
 
-<style></style>
+<style lang="scss">
+.data-form {
+  .hint {
+    color: gray;
+    font-size: 12px;
+  }
+}
+</style>

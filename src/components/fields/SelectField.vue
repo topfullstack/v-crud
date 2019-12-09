@@ -1,12 +1,6 @@
 <template>
-  <el-select
-    v-model="val"
-    v-bind="$attrs"
-    :remote-method="remoteConfig ? fetchOptions : null"
-  >
-    <el-option v-bind="option" v-for="option in options" :key="option.value">
-      {{ option.label }}
-    </el-option>
+  <el-select v-model="val" v-bind="$attrs" :remote-method="remoteConfig ? fetchSearchedOptions : null">
+    <el-option v-bind="option" v-for="option in localOptions" :key="option.value">{{ option.label }}</el-option>
   </el-select>
 </template>
 
@@ -41,49 +35,53 @@ export default class SelectField extends Vue {
     this.$emit("input", value);
   }
 
-  async fetchOptions(q = "") {
-    console.log(this.remoteConfig)
+  async fetchSearchedOptions(q) {
+    if (!q) {
+      return;
+    }
+    const { url, labelField, valueField } = this.remoteConfig;
+    const where = { [labelField]: { $regex: q } };
+    const options = await this.fetchOptions(where);
+    this.localOptions = [...new Set([...options, ...this.localOptions])]
+  }
+
+  async fetchSelectedOptions() {
+    const { url, labelField, valueField } = this.remoteConfig;
+    const where = {
+      [valueField]: { $in: this.isArray ? this.val : [this.val] }
+    };
+    this.localOptions = await this.fetchOptions(where);
+  }
+
+  async fetchOptions(where) {
     const { url, labelField, valueField } = this.remoteConfig || {
       url: "",
       labelField: "",
       valueField: ""
     };
-    console.log({url})
     if (!url) {
       return [];
     }
 
-    const searchRes = await this.$http.get(url, {
+    const res = await this.$http.get(url, {
       params: {
         query: {
-          where: { [labelField]: { $regex: q } }
+          where
         }
       }
     });
-    const selectedRes = await this.$http.get(url, {
-      params: {
-        query: {
-          where: {
-            [valueField]: { $in: this.isArray ? this.val : [this.val] }
-          }
-        }
-      }
-    });
-    const searchData = get(searchRes.data, "data", []);
-    const selectedData = get(selectedRes.data, "data", []).filter(
-      (v: any) => !searchData.find((vv: any) => vv._id === v._id)
-    );
-    this.localOptions = searchData.concat(selectedData).map(v => ({
+    return get(res.data, 'data', []).map(v => ({
       label: get(v, labelField),
       value: get(v, valueField)
     }));
   }
 
-  created() {
-    this.$watch("value", () => this.fetchOptions(), {
-      deep: true,
-      immediate: true
-    });
+  async mounted() {
+    await this.fetchSelectedOptions()
+    // this.$watch("value", () => this.fetchSelectedOptions(), {
+    //   // deep: true,
+    //   immediate: true
+    // });
   }
 }
 </script>

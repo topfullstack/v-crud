@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header height="50px" class="d-flex align-items-center border-bottom">
-          <h5 class="m-0">后台管理系统</h5>
+      <el-header height="50px" style="border-bottom:1px solid #ddd;">
+          <h3 class="m-0">后台管理系统</h3>
         </el-header>
       
       <el-container>
@@ -30,5 +30,11 @@ export default {
   components: {}
 };
 </script>
+
+<style lang="scss">
+  *:focus{
+    outline: none !important;
+  }
+</style>
 
 

@@ -39,8 +39,6 @@ export const users = {
     title: "更新用户",
     form: {
       labelWidth: "120px",
-
-      action: "users/${row._id}",
       successMessage: "用户更新成功",
       fields: [
         { prop: "username", label: "姓名" },
@@ -160,12 +158,20 @@ export const courses = {
     form: {
       labelWidth: "100px",
       tabs: true,
+      rules: {
+        title: [{ required: true, message: "请填写标题" }]
+      },
       fields: [
         {
           prop: "basic",
           label: "基础信息",
           fields: [
-            { prop: "title", label: "标题" },
+            {
+              prop: "title",
+              label: "标题",
+              placeholder: "课程标题",
+              hint: "30字以内"
+            },
             {
               prop: "posts",
               label: "音频",
@@ -231,13 +237,12 @@ export const groups = {
   },
   edit: {
     dialog: {
-      title: "编辑班级",
+      title: "编辑班级"
     },
 
     form: {
-      
       tabs: {
-        value: 'steps',
+        value: "steps"
       },
       labelWidth: "6em",
       size: "small",
@@ -249,7 +254,7 @@ export const groups = {
             {
               prop: "modular",
               label: "功能模块",
-              tag: 'SubField',
+              tag: "SubField",
               fields: [
                 { prop: "is_show_sign", label: "签到", tag: "el-switch" },
                 { prop: "is_show_research", label: "调研", tag: "el-switch" }
@@ -264,11 +269,11 @@ export const groups = {
             {
               prop: "steps",
               label: "阶段",
-              tag: 'table-field',
+              tag: "table-field",
               multiple: true,
               type: "table",
               fields: [
-                { prop: "name", label: "名称", width: '120px' },
+                { prop: "name", label: "名称", width: "120px" },
                 {
                   prop: "dates",
                   label: "时间",
@@ -276,7 +281,7 @@ export const groups = {
                   type: "datetimerange",
                   format: "yyyy-MM-dd",
                   style: {
-                    width: '100% !important'
+                    width: "100% !important"
                   }
                 },
                 {
@@ -296,7 +301,7 @@ export const groups = {
                     labelField: "title",
                     valueField: "_id"
                   }
-                },
+                }
               ]
             }
           ]
@@ -314,5 +319,38 @@ export const groups = {
   },
   list: {
     fields: [{ prop: "_id" }, { prop: "title" }, { prop: "teacher.username" }]
+  }
+};
+
+export const posts = {
+  title: "音频管理",
+  list: {
+    fields: [{ prop: "title", label: "标题" }]
+  },
+  search: {
+    form: {
+      fields: [{ prop: "title", label: "标题", regex: true }]
+    }
+  },
+  edit: {
+    form: {
+      labelWidth: "100px",
+      fields: [
+        { prop: "title", label: "标题" },
+        {
+          prop: "cover",
+          label: "封面图",
+          tag: "upload-field"
+        },
+        {
+          prop: "voice",
+          label: "音频/视频",
+          tag: "upload-field",
+          preview: {
+            tag: 'a'
+          }
+        }
+      ]
+    }
   }
 };
