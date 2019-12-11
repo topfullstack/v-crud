@@ -20,6 +20,9 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "v-crud": [
+        "./"
       ]
     },
     "lib": [
@@ -34,7 +37,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx", "src/plugins/crud.js"
   ],
   "exclude": [
     "node_modules"

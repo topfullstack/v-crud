@@ -1,13 +1,13 @@
 {
   "name": "v-crud",
-  "version": "0.5.0",
-  "main": "dist/vue-crud.umd.min.js",
-  "main1": "dist/vue-crud.umd.min.js",
+  "version": "0.6.0",
+  "main": "dist/v-crud.umd.min.js",
+  "main1": "dist/v-crud.umd.min.js",
 
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --filename v-crud --name VCrud src/plugins/crud.ts",
+    "lib": "vue-cli-service build --formats umd-min --target lib --filename v-crud --name VCrud --dest ./dist/ ./src/plugins/crud.ts",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
