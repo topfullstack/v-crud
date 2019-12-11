@@ -2,7 +2,7 @@
   <component
     class="data-table-dialog"
     v-bind="dialog"
-    :is="get(dialog, 'tag', 'el-dialog')"
+    :is="get(dialog, 'component', 'el-dialog')"
     :visible="visible"
     @update:visible="val => $emit('update:visible', val)"
   >

@@ -1,27 +1,23 @@
 {
-  "name": "vue-crud",
-  "version": "0.1.0",
-  "main": "dist/vue-crud.umd.js",
-  "main1": "dist/vue-crud.umd.js",
+  "name": "v-crud",
+  "version": "0.5.0",
+  "main": "dist/vue-crud.umd.min.js",
+  "main1": "dist/vue-crud.umd.min.js",
 
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --name vue-crud src/plugins/crud.ts",
+    "lib": "vue-cli-service build --target lib --filename v-crud --name VCrud src/plugins/crud.ts",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
     "core-js": "^3.4.3",
-    "date-fns": "^2.8.1",
     "dayjs": "^1.8.17",
-    "deepmerge": "^4.2.2",
     "dot-prop": "^5.2.0",
     "element-ui": "^2.4.5",
     "lodash": "^4.17.15",
-    "micromustache": "^6.1.1",
-    "mustache": "^3.1.0",
     "qrcode.vue": "^1.7.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

@@ -1,29 +1,43 @@
-# vue-crud
+# v-crud 基于ElementUI的CRUD组件
+> 参考 [avue](https://github.com/nmxiaowei/avue) 实现,更适用我自己的项目场景的CRUD组件.
 
-## Project setup
+## 安装
 ```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
+yarn add v-crud
 ```
 
-### Compiles and minifies for production
-```
-yarn build
+```ts
+// 确保先引用ElementUI
+import VCrud from 'v-crud'
+Vue.use(VCrud)
+
+// 如果需要传递全局参数
+Vue.use(VCrud, options)
 ```
 
-### Run your unit tests
-```
-yarn test:unit
-```
+## 使用
 
-### Lints and fixes files
-```
-yarn lint
-```
+```html
+<template>
+  <v-crud-table resource="users" :config="config"></v-crud-table>
+</template>
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<script>
+export default {
+  data(){
+    return {
+      config: {
+        title: '用户管理',
+        list: {
+          fields: [
+            { prop: 'id', label: 'ID' },
+            { prop: 'name', label: '用户名' },
+            { prop: 'avatar', label: '头像', tag },
+          ]
+        }
+      }
+    }
+  }
+}
+</script>
+```

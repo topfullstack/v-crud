@@ -1,6 +1,6 @@
 <template>
   <div class="data-table">
-    <h3 v-if="get(localConfig, 'title')" :is="get(localConfig, 'tag', 'h3')">
+    <h3 v-if="get(localConfig, 'title')" :is="get(localConfig, 'component', 'h3')">
       {{ get(localConfig, "title") }}
     </h3>
     <div class="toolbar">
@@ -105,7 +105,10 @@ import { Vue, Component, Prop } from "vue-property-decorator";
   components: { DataValue, DataForm, DataTableDialog }
 })
 export default class DataTable extends Vue {
-  @Prop(String) resource!: string;
+  @Prop({
+    type: String,
+    required: true
+  }) resource!: string;
   @Prop() config!: any;
 
   isShowDialog = false;
@@ -293,7 +296,7 @@ export default class DataTable extends Vue {
   }
 
   mounted() {
-    this.defaults = merge({}, this.localDefaults, (this as any).$crudDefaults);
+    this.defaults = merge({}, this.localDefaults, (this as any).$crudConfig || {});
     this.$watch(
       "config",
       config => {

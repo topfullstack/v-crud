@@ -1,8 +1,8 @@
 <template>
-  <component v-model="val" v-bind="field" :is="tag">
-    <template v-if="subTag">
+  <component v-model="val" v-bind="field" :is="component">
+    <template v-if="subComponent">
       <component
-        :is="subTag"
+        :is="subComponent"
         :label="isCheckboxOrRadio ? option.value : option.label"
         :value="isCheckboxOrRadio ? undefined : option.value"
         v-for="option in localOptions"
@@ -79,20 +79,20 @@ export default class DataInput extends Vue {
   }
 
   get isCheckboxOrRadio() {
-    return ["el-checkbox", "el-radio"].includes(this.subTag as any);
+    return ["el-checkbox", "el-radio"].includes(this.subComponent as any);
   }
 
-  get tag() {
-    return get(this.field, "tag", "el-input");
+  get component() {
+    return get(this.field, "component", "el-input");
   }
 
-  get subTag() {
+  get subComponent() {
     const tags = {
       "el-radio-group": "el-radio",
       "el-checkbox-group": "el-checkbox",
       "el-select": "el-option"
     };
-    return get(tags, this.field.tag, null);
+    return get(tags, this.field.component, null);
   }
 
   get isArray() {
@@ -100,7 +100,7 @@ export default class DataInput extends Vue {
   }
 
   get isSelect() {
-    return ["el-select"].includes(this.field.tag);
+    return ["el-select"].includes(this.field.component);
   }
 
   get val() {

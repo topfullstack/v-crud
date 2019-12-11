@@ -11,7 +11,7 @@
     <span v-else-if="field.options">{{ getOptionLabel(val) }}</span>
     <div
       v-else
-      :is="tag"
+      :is="component"
       v-bind="attrs"
       @click.native="!!field.dialog && (isShow = true)"
     >
@@ -22,7 +22,7 @@
       <div
         style="display:flex;justify-content: center;flex-direction: column;align-items: center;"
       >
-        <span :is="tag" v-bind="attrs"></span>
+        <span :is="component" v-bind="attrs"></span>
         <el-alert
           v-if="get(field, 'dialog.alert')"
           v-bind="get(field, 'dialog.alert', {})"
@@ -68,8 +68,8 @@ export default class DataValue extends Vue {
     return attrs;
   }
 
-  get tag() {
-    return this.field.tag || "span";
+  get component() {
+    return this.field.component || "span";
   }
 
   get val() {

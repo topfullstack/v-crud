@@ -4,7 +4,7 @@ export const users = {
       label: "创建用户"
     },
     dialog: {
-      // tag: "el-drawer",
+      component: "el-drawer",
       title: "创建用户",
       size: "80%",
       direction: "ltr"
@@ -19,7 +19,7 @@ export const users = {
         {
           prop: "role_id",
           label: "角色",
-          tag: "el-radio-group",
+          component: "el-radio-group",
           options: [
             { label: "讲师", value: 1 },
             { label: "用户", value: 2 }
@@ -28,7 +28,7 @@ export const users = {
         {
           prop: "birthday",
           label: "生日",
-          tag: "el-date-picker",
+          component: "el-date-picker",
           type: "date",
           valueFormat: "yyyy-MM-dd"
         }
@@ -45,7 +45,7 @@ export const users = {
         {
           prop: "role_id",
           label: "角色",
-          tag: "el-radio-group",
+          component: "el-radio-group",
           options: [
             { label: "讲师", value: 1 },
             { label: "用户", value: 2 }
@@ -54,7 +54,7 @@ export const users = {
         {
           prop: "birthday",
           label: "生日",
-          tag: "el-date-picker",
+          component: "el-date-picker",
           type: "date",
           valueFormat: "yyyy-MM-dd"
         }
@@ -72,13 +72,13 @@ export const users = {
         prop: "balance",
         label: "余额",
         range: true,
-        tag: "el-input-number"
+        component: "el-input-number"
       },
       {
         prop: "created_at",
         label: "注册时间",
         type: "datetimerange",
-        tag: "el-date-picker",
+        component: "el-date-picker",
         format: "yyyy-MM-dd",
         style: { width: "220px" }
       }
@@ -119,14 +119,13 @@ export const users = {
 
 export const courses = {
   title: "课程管理",
-  // tag: 'h2',
+  // component: 'h2',
   search: {
     form: {
       fields: [{ prop: "title", label: "标题", regex: true }]
     }
   },
   create: {
-    
     dialog: {
       title: "创建课程"
     },
@@ -142,7 +141,7 @@ export const courses = {
             {
               prop: "cover",
               label: "封面图",
-              tag: "upload-field"
+              component: "upload-field"
             }
           ]
         }
@@ -150,9 +149,9 @@ export const courses = {
     }
   },
   edit: {
-    fetchUrl: 'courses/${row._id}',
+    fetchUrl: "courses/${row._id}",
     dialog: {
-      // tag: "el-drawer",
+      // component: "el-drawer",
       title: "编辑课程",
       width: "80%"
       // direction: "ltr"
@@ -160,7 +159,7 @@ export const courses = {
     form: {
       labelWidth: "100px",
       tabs: true,
-      size: 'small',
+      size: "small",
       rules: {
         title: [{ required: true, message: "请填写标题" }]
       },
@@ -168,19 +167,19 @@ export const courses = {
         {
           prop: "basic",
           label: "基础信息",
-          
+
           fields: [
             {
               prop: "title",
               label: "标题",
               placeholder: "课程标题",
               hint: "30字以内",
-              span: 12,
+              span: 12
             },
             {
               prop: "posts",
               label: "音频",
-              tag: "select-field",
+              component: "select-field",
               filterable: true,
               multiple: true,
               remote: true,
@@ -195,12 +194,12 @@ export const courses = {
                 valueField: "_id"
               },
               span: 12,
-              row: true,
+              row: true
             },
             {
               prop: "cover",
               label: "封面图",
-              tag: "upload-field",
+              component: "upload-field",
               span: 12
             }
           ]
@@ -209,7 +208,7 @@ export const courses = {
           prop: "content",
           label: "详情",
           fields: [
-            { prop: "content1", label: "详情1", tag: "html-editor-field" }
+            { prop: "content1", label: "详情1", component: "html-editor-field" }
           ]
         }
       ]
@@ -228,7 +227,7 @@ export const courses = {
         label: "封面图",
         width: "120px",
         type: "image",
-        tag: "img",
+        component: "img",
         attrs: { src: "${row.cover}", height: "80" }
       }
     ]
@@ -246,7 +245,7 @@ export const groups = {
   edit: {
     dialog: {
       title: "编辑班级",
-      tag: "el-drawer",
+      component: "el-drawer",
       size: "90%"
     },
 
@@ -264,10 +263,14 @@ export const groups = {
             {
               prop: "modular",
               label: "功能模块",
-              tag: "SubField",
+              component: "SubField",
               fields: [
-                { prop: "is_show_sign", label: "签到", tag: "el-switch" },
-                { prop: "is_show_research", label: "调研", tag: "el-switch" }
+                { prop: "is_show_sign", label: "签到", component: "el-switch" },
+                {
+                  prop: "is_show_research",
+                  label: "调研",
+                  component: "el-switch"
+                }
               ]
             }
           ]
@@ -279,7 +282,7 @@ export const groups = {
             {
               prop: "steps",
               label: "阶段",
-              tag: "card-field",
+              component: "card-field",
               multiple: true,
               labelWidth: 0,
               span: 8,
@@ -288,7 +291,7 @@ export const groups = {
                 {
                   prop: "dates",
                   label: "时间",
-                  tag: "el-date-picker",
+                  component: "el-date-picker",
                   type: "datetimerange",
                   format: "yyyy-MM-dd",
                   style: {
@@ -298,7 +301,7 @@ export const groups = {
                 {
                   prop: "courses",
                   label: "专栏",
-                  tag: "select-field",
+                  component: "select-field",
                   filterable: true,
                   multiple: true,
                   remote: true,
@@ -330,7 +333,7 @@ export const groups = {
           label: "基础信息",
           fields: [
             { prop: "title", label: "标题" },
-            { prop: "amount", label: "人数", tag: "el-input-number" }
+            { prop: "amount", label: "人数", component: "el-input-number" }
           ]
         }
       ]
@@ -343,7 +346,7 @@ export const groups = {
       { prop: "teacher.username" },
       {
         prop: "logo",
-        tag: "el-image",
+        component: "el-image",
         width: "100px",
         dialog: {
           title: "预览",
@@ -356,7 +359,7 @@ export const groups = {
       },
       {
         prop: "qrcode",
-        tag: "vue-qrcode",
+        component: "vue-qrcode",
         dialog: {
           title: "二维码",
           width: "20rem",
@@ -378,11 +381,8 @@ export const groups = {
 export const posts = {
   title: "音频管理",
   list: {
-    action: {
-      
-
-    },
-    fields: [{ prop: "title", label: "标题" }],
+    action: {},
+    fields: [{ prop: "title", label: "标题" }]
   },
   create: {
     fields: [{ prop: "title", label: "标题", regex: true }]
@@ -400,24 +400,24 @@ export const posts = {
         {
           prop: "cover",
           label: "封面图",
-          tag: "upload-field"
+          component: "upload-field"
         },
         {
           prop: "voice",
           label: "音频/视频",
-          tag: "upload-field",
+          component: "upload-field",
           preview: {
-            tag: "a"
+            component: "a"
           }
         },
         {
           prop: "tags",
           label: "TAGS",
-          tag: "select-field",
+          component: "select-field",
           multiple: true,
           filterable: true,
           allowCreate: true,
-          defaultFirstOption: true,
+          defaultFirstOption: true
         }
       ]
     }

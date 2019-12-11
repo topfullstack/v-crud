@@ -1,7 +1,7 @@
 <template>
   <component
     class="data-form"
-    :is="tag"
+    :is="component"
     v-bind="$attrs"
     @submit.native.prevent="submit"
     v-loading="loading"
@@ -74,7 +74,7 @@ export default class DataForm extends Vue {
     type: String,
     default: "el-form"
   })
-  tag!: string;
+  component!: string;
 
   @Prop() tabs!: any;
 
