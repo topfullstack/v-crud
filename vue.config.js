@@ -2,7 +2,7 @@ const path = require("path")
 
 
 module.exports = {
-  css: { extract: false },
+  // css: { extract: false },
   outputDir: "docs",
   configureWebpack: {
     output: {
@@ -11,7 +11,9 @@ module.exports = {
     externals: {
       'element-ui': 'element-ui',
       'vue2-editor': 'vue2-editor',
-      'lodash': 'lodash'
+      'vue': 'vue',
+      'vue-class-component': 'vue-class-component',
+      'vue-property-decorator': 'vue-property-decorator',
     },
     resolve: {
       // 设置别名

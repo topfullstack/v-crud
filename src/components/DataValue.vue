@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { merge, get, set, template, formatDate } from "@/components/util";
+import { merge, get, set, template, formatDate } from "./util";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { Field } from "@/interfaces";
 

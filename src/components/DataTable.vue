@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { merge, get, set, template } from "@/components/util";
+import { merge, get, set, template } from "./util";
 import DataValue from "./DataValue.vue";
 import DataForm from "./DataForm.vue";
 import DataTableDialog from "./DataTableDialog.vue";
