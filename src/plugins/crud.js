@@ -12,9 +12,10 @@ import VCrudValue from "../components/DataValue.vue";
 
 export default {
   VCrudTable, VCrudForm, VCrudInput, VCrudValue,
-  install(Vue, options) {
+  install(Vue, options = {}) {
     
     Vue.prototype.$crudConfig = options
+    Vue.prototype.$httpRequest = options.http || Vue.prototype.$http
     Vue.component('VCrudTable', VCrudTable);
     Vue.component('VCrudForm', VCrudForm);
     Vue.component('VCrudInput', VCrudInput);

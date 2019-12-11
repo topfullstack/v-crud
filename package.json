@@ -1,13 +1,12 @@
 {
   "name": "v-crud",
-  "version": "0.6.0",
+  "version": "0.6.1",
+  "module": "src/plugins/crud.js",
   "main": "dist/v-crud.umd.min.js",
-  "main1": "dist/v-crud.umd.min.js",
-
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --formats umd-min --target lib --filename v-crud --name VCrud --dest ./dist/ ./src/plugins/crud.ts",
+    "lib": "vue-cli-service build --formats umd-min --target lib --filename v-crud --name VCrud --dest ./dist/ ./src/plugins/crud.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
@@ -15,7 +14,6 @@
     "bootstrap": "^4.4.1",
     "core-js": "^3.4.3",
     "dayjs": "^1.8.17",
-    "dot-prop": "^5.2.0",
     "element-ui": "^2.4.5",
     "lodash": "^4.17.15",
     "qrcode.vue": "^1.7.0",
@@ -47,5 +45,8 @@
     "typescript": "~3.5.3",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-template-compiler": "^2.6.10"
-  }
+  },
+  "repository": "git@github.com:topfullstack/vue-crud.git",
+  "author": "Johnny <wu-xuesong@qq.com>",
+  "license": "MIT"
 }

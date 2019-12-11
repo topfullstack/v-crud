@@ -8,6 +8,11 @@ module.exports = {
     output: {
       libraryExport: "default"
     },
+    externals: {
+      'element-ui': 'element-ui',
+      'vue2-editor': 'vue2-editor',
+      'lodash': 'lodash'
+    },
     resolve: {
       // 设置别名
       alias: {
